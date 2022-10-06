@@ -1,5 +1,3 @@
-import edu.upc.eetac.dsa.models.Order;
-import edu.upc.eetac.dsa.models.Product;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,14 +8,12 @@ import java.util.List;
 public class ProductManagerImplTest {
 
     ProductManager productManager;
-
     @Before
     public void setUp() {
         productManager = new ProductManagerImpl();
         productManager.addUser("1111111", "Juan", "lopez");
         productManager.addUser("2222222",  "David", "Rincon");
         productManager.addUser("3333333",  "Juan", "Hernández");
-
         productManager.addProduct("B001", "Coca cola", 2);
         productManager.addProduct("C002", "Café amb gel", 1.5);
         productManager.addProduct("A002", "Donut", 2.25);
@@ -63,7 +59,6 @@ public class ProductManagerImplTest {
         o4.addLP(3, "B001");
         o4.addLP(2, "A003");
         this.productManager.addOrder(o4);
-
         Assert.assertEquals(4, this.productManager.numOrders());
 
     }

@@ -1,18 +1,23 @@
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Order {
     private String orderID;
-    public Order(String id)
-    {
+    private ArrayList<ProductsLine> productsLinesList;
+    public Order(String id){
         this.orderID = id;
+        productsLinesList = new ArrayList<ProductsLine>();
     }
-    public void addLP(int i, String b001) {
+    public String getOrderID() {
+        return orderID;
     }
-
+    public void addLP(int units, String productId) {
+        ProductsLine newPL = new ProductsLine(units, productId);
+        productsLinesList.add(newPL);
+    }
     public ProductsLine getLP(int i) {
-
-       return null;
+       return productsLinesList.get(i);
+    }
+    public ArrayList<ProductsLine> getProductsLinesList(){
+        return productsLinesList;
     }
 }

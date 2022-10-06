@@ -1,5 +1,3 @@
-import edu.upc.eetac.dsa.models.Order;
-import edu.upc.eetac.dsa.models.Product;
 
 import java.util.List;
 
@@ -11,10 +9,6 @@ public interface ProductManager {
     public List<Order> ordersByUser(String userId);
     /////////////////////////////////////////////
     ////////////////////////////////////////////
-
-
-
-
     public void addUser(String s, String name, String surname);
     public void addProduct(String productId, String name, double price);
 
