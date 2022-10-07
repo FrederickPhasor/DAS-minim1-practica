@@ -1,16 +1,15 @@
-import java.util.Hashtable;
-
-public class ProductsLine {
-    private int amount;
+public class StackOfProducts {
     private String productID;
-    public ProductsLine(int amount, String productID){
+    private int amount;
+
+    public StackOfProducts(int amount, String productID){
         this.amount = amount;
         this.productID = productID;
     }
     public int getQuantity() {
         return amount;
     }
-    public String GetId(){
+    public String getId(){
         return productID;
     }
 }

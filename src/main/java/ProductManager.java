@@ -5,12 +5,12 @@ public interface ProductManager {
     public List<Product> productsByPrice();
     public List<Product> productsBySales();
     public void addOrder(Order order);
-    public Order processOrder();
+    public Order processNextOrder();
     public List<Order> ordersByUser(String userId);
     /////////////////////////////////////////////
     ////////////////////////////////////////////
-    public void addUser(String s, String name, String surname);
-    public void addProduct(String productId, String name, double price);
+    public void createUser(String s, String name, String surname);
+    public void createProduct(String productId, String name, double price);
 
     public Product getProduct(String productId);
 

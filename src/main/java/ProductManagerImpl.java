@@ -2,14 +2,12 @@ import java.util.*;
 
 public class ProductManagerImpl implements ProductManager {
 
-    Hashtable<String, String> users;
-    Hashtable<String, ArrayList<Order>> usersOrders;
+    Hashtable<String, User> users;
     Stack<Order> ordersStack;
     Hashtable<String, Product> products;
 
     public ProductManagerImpl(){
-        usersOrders = new Hashtable<String, ArrayList<Order>>();
-        users = new Hashtable<String,String>();
+        users = new Hashtable<String,User>();
         products = new Hashtable<String,Product>();
         ordersStack = new Stack<Order>();
     }
@@ -22,48 +20,40 @@ public class ProductManagerImpl implements ProductManager {
 
     public List<Product> productsBySales() {
         List<Product> nonSortedList = new ArrayList<Product>(products.values());
-        Collections.sort(nonSortedList, new SortBySales());
+        nonSortedList.sort(new SortBySales());
         return nonSortedList;
     }
 
     public void addOrder(Order order) {
-        String orderID = order.getOrderID();
-
+        String orderID = order.getOwnerID();
         ordersStack.push(order);
     }
-    public Order processOrder() {
+    public Order processNextOrder() {
         Order orderToProcess = ordersStack.pop();
-        ArrayList<ProductsLine> p = orderToProcess.getProductsLinesList();
-        for (ProductsLine pl : p) {
-            Product product = products.get(pl.GetId());
-            product.purchase(pl.getQuantity());
-        }
-        String userID = orderToProcess.getOrderID();
-        ArrayList<Order> newOrder;
-        if (usersOrders.get(userID) == null){
-              newOrder =  new ArrayList<Order>();
-            newOrder.add(orderToProcess);
-            usersOrders.put(userID,newOrder);
-        }
-        else{
-             usersOrders.get(userID).add(orderToProcess);
+        ArrayList<StackOfProducts> stacks = orderToProcess.getProductsStacks();
+        for (StackOfProducts stack : stacks) {
+            Product product = products.get(stack.getId());
+            product.purchase(stack.getQuantity());
         }
 
+        String userID = orderToProcess.getOwnerID();
+        User owner = users.get(userID);
+        owner.addOrder(orderToProcess);
         return orderToProcess;
     }
 
     public List<Order> ordersByUser(String userId) {
-        return usersOrders.get(userId);
+        return users.get(userId).myOrders;
     }
 
-    public void addUser(String s, String name, String surname) {
-        users.put(s,name);
-        users.put(s,surname);
+    public void createUser(String id, String name, String surname) {
+        User newUser = new User(id,name,surname);
+        users.put(id,newUser);
     }
 
-    public void addProduct(String productId, String description, double price) {
-    Product newProduct = new Product(productId, description,price);
-    products.put(productId,newProduct);
+    public void createProduct(String productId, String name, double price) {
+        Product newProduct = new Product(productId, name, price);
+        products.put(productId, newProduct);
     }
 
     public Product getProduct(String productId) {
