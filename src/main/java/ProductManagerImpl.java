@@ -5,22 +5,22 @@ public class ProductManagerImpl implements ProductManager {
     Hashtable<String, User> users;
     Stack<Order> ordersStack;
     Hashtable<String, Product> products;
-
     public ProductManagerImpl(){
         users = new Hashtable<String,User>();
         products = new Hashtable<String,Product>();
         ordersStack = new Stack<Order>();
     }
-
     public List<Product> productsByPrice() {
         List<Product> nonSortedList = new ArrayList<Product>(products.values());
         Collections.sort(nonSortedList);
-        return nonSortedList;
+        List<Product> sortedList = nonSortedList;
+        return sortedList;
     }
-
     public List<Product> productsBySales() {
         List<Product> nonSortedList = new ArrayList<Product>(products.values());
-        nonSortedList.sort(new SortBySales());
+        SortBySales sortCriteria =new SortBySales() ;
+        nonSortedList.sort(sortCriteria);
+        List<Product> sortedList = nonSortedList;
         return nonSortedList;
     }
 
@@ -30,16 +30,24 @@ public class ProductManagerImpl implements ProductManager {
     }
     public Order processNextOrder() {
         Order orderToProcess = ordersStack.pop();
-        ArrayList<StackOfProducts> stacks = orderToProcess.getProductsStacks();
-        for (StackOfProducts stack : stacks) {
-            Product product = products.get(stack.getId());
-            product.purchase(stack.getQuantity());
-        }
+        RegisterSales(orderToProcess);
+        RegisterUserPurchase(orderToProcess);
+        return orderToProcess;
+    }
 
+    private void RegisterUserPurchase(Order orderToProcess) {
         String userID = orderToProcess.getOwnerID();
         User owner = users.get(userID);
         owner.addOrder(orderToProcess);
-        return orderToProcess;
+    }
+
+    private void RegisterSales(Order orderToProcess) {
+        ArrayList<StackOfProducts> stacksList = orderToProcess.getProductsStacks();
+        for (StackOfProducts stack : stacksList) {
+            Product product = products.get(stack.getProductID());
+            int amount = stack.getQuantity();
+            product.purchase(amount);
+        }
     }
 
     public List<Order> ordersByUser(String userId) {

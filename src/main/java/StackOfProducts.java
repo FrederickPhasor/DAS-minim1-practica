@@ -9,7 +9,7 @@ public class StackOfProducts {
     public int getQuantity() {
         return amount;
     }
-    public String getId(){
+    public String getProductID(){
         return productID;
     }
 }

@@ -4,54 +4,54 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.List;
 public class ProductManagerImplTest {
-    ProductManager productManager;
+    ProductManager productManagerBeingTested;
     @Before
     public void setUp() {
-        productManager = new ProductManagerImpl();
+        productManagerBeingTested = new ProductManagerImpl();
         createUsers();
         createProducts();
         createInitialStateOrders();
     }
     @After
     public void tearDown(){
-        this.productManager = null;
+        this.productManagerBeingTested = null;
     }
     @Test
     public void testAddOrder() {
-        int currentNumber = this.productManager.numOrders();
+        int currentNumber = this.productManagerBeingTested.numOrders();
         Order newOrder = new Order("2222222");
         newOrder.addProduct(ProductsIDs.Cocacola,3);
         newOrder.addProduct(ProductsIDs.Croissant,2);
-        this.productManager.addOrder(newOrder);
-        Assert.assertEquals(currentNumber + 1, this.productManager.numOrders());
+        this.productManagerBeingTested.addOrder(newOrder);
+        Assert.assertEquals(currentNumber + 1, this.productManagerBeingTested.numOrders());
     }
-
     @Test
     public void processOrderTest() {
-        Order order1 = this.productManager.processNextOrder();
-        Assert.assertEquals(2, this.productManager.numOrders());
-        Assert.assertEquals(3, order1.getLP(0).getQuantity());
-        Assert.assertEquals(2, order1.getLP(1).getQuantity());
-        Assert.assertEquals(3, this.productManager.numSales(ProductsIDs.Cocacola));
+        Order order1 = this.productManagerBeingTested.processNextOrder();
+        Assert.assertEquals(2, this.productManagerBeingTested.numOrders());
 
-        Order order2 = this.productManager.processNextOrder();
-        Assert.assertEquals(1, this.productManager.numOrders());
-        Assert.assertEquals(4, this.productManager.numSales(ProductsIDs.Cocacola));
+        Assert.assertEquals(3, order1.getStackOfProducts(0).getQuantity());
+        Assert.assertEquals(2, order1.getStackOfProducts(1).getQuantity());
+        Assert.assertEquals(3, this.productManagerBeingTested.numSales(ProductsIDs.Cocacola));
 
-        Order order3 = this.productManager.processNextOrder();
-        Assert.assertEquals(0, this.productManager.numOrders());
-        Assert.assertEquals(7, this.productManager.numSales(ProductsIDs.Cocacola));
+        Order order2 = this.productManagerBeingTested.processNextOrder();
+        Assert.assertEquals(1, this.productManagerBeingTested.numOrders());
+        Assert.assertEquals(4, this.productManagerBeingTested.numSales(ProductsIDs.Cocacola));
+
+        Order order3 = this.productManagerBeingTested.processNextOrder();
+        Assert.assertEquals(0, this.productManagerBeingTested.numOrders());
+        Assert.assertEquals(7, this.productManagerBeingTested.numSales(ProductsIDs.Cocacola));
     }
 
     private void checkInitialsConditionsAreMet(int numberOfUsers, int numberOfProducts, int numberOfOrders) {
-        Assert.assertEquals(numberOfUsers, this.productManager.numUsers());
-        Assert.assertEquals(numberOfProducts, this.productManager.numProducts());
-        Assert.assertEquals(numberOfOrders, this.productManager.numOrders());
+        Assert.assertEquals(numberOfUsers, this.productManagerBeingTested.numUsers());
+        Assert.assertEquals(numberOfProducts, this.productManagerBeingTested.numProducts());
+        Assert.assertEquals(numberOfOrders, this.productManagerBeingTested.numOrders());
     }
 
     @Test
     public void productsSortByPrice() {
-        List<Product> products = this.productManager.productsByPrice();
+        List<Product> products = this.productManagerBeingTested.productsByPrice();
         Assert.assertEquals(ProductsIDs.Croissant, products.get(0).getProductId());
         Assert.assertEquals(1.25, products.get(0).getPrice(), 0);
         Assert.assertEquals(ProductsIDs.IcedCoffe, products.get(1).getProductId());
@@ -65,7 +65,7 @@ public class ProductManagerImplTest {
     public void productsSortByNumSales() {
 
         processOrderTest();
-        List<Product> products = this.productManager.productsBySales();
+        List<Product> products = this.productManagerBeingTested.productsBySales();
         Assert.assertEquals(ProductsIDs.Croissant, products.get(0).getProductId());
         Assert.assertEquals("Croissant", products.get(0).getName());
         Assert.assertEquals(0, products.get(0).getNumSales());
@@ -85,22 +85,21 @@ public class ProductManagerImplTest {
     @Test
     public void ordersByUserTest() {
         processOrderTest();
-        List<Order> orders1 = this.productManager.ordersByUser("1111111");
+        List<Order> orders1 = this.productManagerBeingTested.ordersByUser("1111111");
         Assert.assertEquals(1, orders1.size());
-        List<Order> orders2 = this.productManager.ordersByUser("2222222");
+        List<Order> orders2 = this.productManagerBeingTested.ordersByUser("2222222");
         Assert.assertEquals(1, orders2.size());
-
     }
     private void createProducts() {
-        productManager.createProduct(ProductsIDs.Cocacola, "Coca cola", 2);
-        productManager.createProduct(ProductsIDs.IcedCoffe, "Café amb gel", 1.5);
-        productManager.createProduct(ProductsIDs.Donut, "Donut", 2.25);
-        productManager.createProduct(ProductsIDs.Croissant, "Croissant", 1.25);
+        productManagerBeingTested.createProduct(ProductsIDs.Cocacola, "Coca cola", 2);
+        productManagerBeingTested.createProduct(ProductsIDs.IcedCoffe, "Café amb gel", 1.5);
+        productManagerBeingTested.createProduct(ProductsIDs.Donut, "Donut", 2.25);
+        productManagerBeingTested.createProduct(ProductsIDs.Croissant, "Croissant", 1.25);
     }
     private void createUsers() {
-        productManager.createUser("1111111", "Juan", "lopez");
-        productManager.createUser("2222222",  "David", "Rincon");
-        productManager.createUser("3333333",  "Juan", "Hernández");
+        productManagerBeingTested.createUser("1111111", "Juan", "lopez");
+        productManagerBeingTested.createUser("2222222",  "David", "Rincon");
+        productManagerBeingTested.createUser("3333333",  "Juan", "Hernández");
     }
     private void createInitialStateOrders() {
         Order o1 = new Order("1111111");
@@ -115,11 +114,11 @@ public class ProductManagerImplTest {
         o3.addProduct(ProductsIDs.Cocacola,3 );
         o3.addProduct(ProductsIDs.Donut,2);
 
-        this.productManager.addOrder(o1);
-        Assert.assertEquals(1, this.productManager.numOrders());
-        this.productManager.addOrder(o2);
-        Assert.assertEquals(2, this.productManager.numOrders());
-        this.productManager.addOrder(o3);
-        Assert.assertEquals(3, this.productManager.numOrders());
+        this.productManagerBeingTested.addOrder(o1);
+        Assert.assertEquals(1, this.productManagerBeingTested.numOrders());
+        this.productManagerBeingTested.addOrder(o2);
+        Assert.assertEquals(2, this.productManagerBeingTested.numOrders());
+        this.productManagerBeingTested.addOrder(o3);
+        Assert.assertEquals(3, this.productManagerBeingTested.numOrders());
     }
 }

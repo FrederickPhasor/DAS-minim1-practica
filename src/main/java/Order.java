@@ -14,7 +14,7 @@ public class Order {
         StackOfProducts newPL = new StackOfProducts(units, productId);
         productsLinesList.add(newPL);
     }
-    public StackOfProducts getLP(int i) {
+    public StackOfProducts getStackOfProducts(int i) {
        return productsLinesList.get(i);
     }
     public ArrayList<StackOfProducts> getProductsStacks(){

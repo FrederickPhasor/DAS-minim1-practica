@@ -1,5 +1,5 @@
 
-public class Product  implements Comparable<Product>{
+public class Product  implements Comparable<Product> {
     private String id;
     private String name;
     private double price;
